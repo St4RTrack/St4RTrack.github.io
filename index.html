@@ -1,0 +1,404 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>St4RTrack: Simultaneous 4D Reconstruction and Tracking in the World</title>
+  <link href="./files/style.css" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖖</text></svg>" type="image/svg+xml">
+  <script type="text/javascript" src="./files/jquery.mlens-1.0.min.js"></script>
+  <script type="text/javascript" src="./files/jquery.js"></script>
+  <style>
+    .divider {
+      border-right: 2px dashed #737373;
+      width: 2px;
+    }
+  </style>
+  <style>
+    .divider_horizontal {
+      border-top: 2px dashed #737373;
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+    }
+  </style>
+  <!-- Begin new styles from demos page -->
+  <style>
+    body {
+      padding: 2em;
+      font-family: sans-serif;
+    }
+
+    iframe {
+      border-radius: 0.5em;
+      width: 57.5em;
+      height: 32.75em;
+      border: none;
+      box-shadow: 0 0 1em 0em rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+      iframe {
+        width: 100%;
+        height: 30em;
+      }
+    }
+
+    a,
+    a:link {
+      color: #777;
+    }
+
+    /* Styles for the instruction icons and text */
+    .instructions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.2em;
+      text-align: center;
+      padding: 0.6em;
+    }
+
+    .instruction-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      font-size: 1.2em;
+    }
+
+    .instruction-item img {
+      width: 36px;
+      height: 36px;
+    }
+
+    .instructions_small {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1em;
+      text-align: center;
+      padding: 0.5em;
+    }
+
+    .instruction-item_small {
+      display: flex;
+      align-items: center;
+      gap: 0.3em;
+      font-size: 1.0em;
+    }
+
+    .instruction-item_small img {
+      width: 30px;
+      height: 30px;
+    }
+
+    /* This creates a container that crops the iframe content */
+    .iframe-container {
+      width: 57.5em;
+      height: 31.0em;
+      overflow: hidden;
+      position: relative;
+      border-radius: 0.5em;
+      box-shadow: 0 0 1em 0em rgba(0, 0, 0, 0.15);
+    }
+    
+    /* This makes the iframe larger than its container and centers it */
+    .iframe-container iframe {
+      position: absolute;
+      top: 0;
+      left: -10%; /* Adjust this value to trim left border */
+      width: 120%; /* Make wider than container to trim sides */
+      height: 100%;
+      border: none;
+      box-shadow: none;
+    }
+  </style>
+  <!-- End new styles -->
+
+  <!-- Add MathJax support -->
+  <script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    };
+  </script>
+</head>
+
+<body>
+  <div class="content">
+    <h1 style="line-height: 1.1;">
+      <!-- <span style="font-size: 48px; vertical-align: middle;">🖖</span> -->
+      <strong><span style="color: #f5c305;">St4RTrack</span>: <span style="color: #f5c305;">S</span>imul<span style="color: #f5c305;">t</span>aneous <span style="color: #f5c305;">4</span>D <span style="color: #f5c305;">R</span>econstruction and <br> <span style="color: #f5c305;">Track</span>ing in the World</strong>
+    </h1>
+    <p id="authors">
+      <span>
+        <a href="https://havenfeng.github.io/">Haiwen Feng<sup>1,2,*</sup></a>
+      </span>
+      <span>
+        <a href="https://junyi42.github.io/">Junyi Zhang<sup>1,*</sup></a>
+      </span>
+      <span>
+        <a href="https://qianqianwang68.github.io/">Qianqian Wang<sup>1</sup></a>
+      </span>
+      <span>
+        <a href="https://judyye.github.io/">Yufei Ye<sup>3</sup></a>
+      </span>
+      <span>
+        <a href="https://ps.is.mpg.de/person/pyu">Pengcheng Yu<sup>2</sup></a>
+      </span>
+    </br>
+      <span>
+        <a href="https://ps.is.mpg.de/person/black">Michael J. Black<sup>2</sup></a>
+      </span>
+      <span>
+        <a href="https://people.eecs.berkeley.edu/~trevor/">Trevor Darrell<sup>1</sup></a>
+      </span>
+      <span>
+        <a href="https://people.eecs.berkeley.edu/~kanazawa/">Angjoo Kanazawa<sup>1</sup></a>
+      </span>
+      <br>
+      <span class="institution">
+        <a href="https://bair.berkeley.edu/"><sup>1</sup> UC Berkeley</a>
+        <a href="https://is.mpg.de/"><sup>2</sup> Max Planck Institute for Intelligent Systems</a>
+        <a href="https://www.stanford.edu/"><sup>3</sup> Stanford University</a>
+      </span>
+      <span class="institution">(*: equal contribution, interchangeable)</span>
+      <!-- <br>
+      <span class="conference">ICLR 2025 (Spotlight)</span>
+      <br> -->
+      <!-- <br> -->
+    <!-- </p> -->
+    </p>
+
+    <br>
+        <img src="./files/teaser_st4rtrack.png" class="teaser-gif" style="width:100%;"><br>
+
+    <!-- add video files/teaser_vid_v2_lowres.mp4 -->
+    <!-- <video width="100%" controls>
+      <source src="./files/teaser_vid_v2_lowres.mp4" type="video/mp4">
+    </video> -->
+    <!-- <br> -->
+    <!-- <br> -->
+
+    <a style="text-align:center">
+      <font size="+1">
+        Given an RGB video capturing dynamic scenes, <strong>St4RTrack</strong> simultaneously tracks the points from the initial frame
+(<span style="color: rgb(0,0,189);">visualized in blue</span>) and reconstructs the geometry of the subsequent frames (<span style="color: rgb(189,0,0);">in red</span>) in a consistent world coordinate frame.
+<strong>St4RTrack</strong> is a <em>feed-forward</em> framework that takes a pair of images as input and outputs two pointmaps in the world frame. By iteratively processing the first frame paired with each subsequent frame, <strong>St4RTrack</strong> achieves simultaneous tracking and reconstruction for the entire video.
+      </font>
+    </a>
+    <font size="+2">
+      <p style="text-align: center;">
+        <a href="files\St4RTrack_paper.pdf" target="_blank">[Paper]</a> &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="https://arxiv.org/abs/2410.03825" target="_blank">[Arxiv]</a> &nbsp;&nbsp;&nbsp;&nbsp;
+        <!-- <a href="page1.html" target="_blank" style="font-weight: bold; color: rgb(238, 60, 223);">[Interactive Results🔥]</a> &nbsp;&nbsp;&nbsp;&nbsp; -->
+        <a href="https://github.com/Junyi42/monst3r" target="_blank">[Code (soon)]</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="files/bibtex.txt" target="_blank">[BibTeX]</a>
+      </p>
+    </font>
+  </div>
+
+  <!-- Begin new content: Demos -->
+<div class="content">
+    <h2>Interactive 4D Visualization</h2>
+    <!-- <p>Explore the 4D reconstruction results of St4RTrack on various dynamic scenes. Please visit <a href="page1.html" style="font-weight: bold; color: rgb(238, 60, 223);">interactive results</a> for more examples.</p>-->
+     <p>Explore the 4D reconstruction results of St4RTrack on various dynamic scenes.</p> 
+  <!-- Instructions with icons -->
+  <div class="instructions" style="margin-top: -1em;">
+    
+    <div class="instruction-item" style="display: flex; align-items: center; margin-top: 10px;">
+      <img src="icons/left-click.png" alt="Left Click" style="margin-right: 0px;">
+      <span>Drag with <em>left</em> click to <strong>rotate</strong></span>
+    </div>
+
+    <div class="instruction-item" style="display: flex; align-items: center; margin-top: 10px;">
+      <img src="icons/scroll-wheel.png" alt="Scroll Wheel" style="margin-right: -5px;">
+      <span>Scroll to <strong>zoom</strong> in/out</span>
+    </div>
+
+    <div class="instruction-item" style="display: flex; align-items: center; margin-top: 10px;">
+      <img src="icons/right-click.png" alt="Right Click" style="margin-right: 0px;">
+      <span>Drag with <em>right</em> click to <strong>move</strong></span>
+    </div>
+  </div>
+
+  <div class="instructions_small">
+    <div class="instruction-item_small" style="display: flex; align-items: center; margin-top: -15px;">
+      <img src="icons/letter-w.png" alt="W" style="margin-right: -10px;">
+      <img src="icons/letter-s.png" alt="S" style="margin-right: 0px;">
+      <span>Moving forward and backward</span>
+    </div>
+
+    <div class="instruction-item_small" style="display: flex; align-items: center; margin-top: -15px;">
+      <img src="icons/letter-a.png" alt="A" style="margin-right: -10px;">
+      <img src="icons/letter-d.png" alt="D" style="margin-right: 0px;">
+      <span>Moving left and right</span>
+    </div>
+
+    <div class="instruction-item_small" style="display: flex; align-items: center; margin-top: -15px;">
+      <img src="icons/letter-q.png" alt="Q" style="margin-right: -10px;">
+      <img src="icons/letter-e.png" alt="E" style="margin-right: 0px;">
+      <span>Moving downward and upward</span>
+    </div>
+  </div>
+
+  <!-- Downsampling note -->
+  <p style="text-align: center; font-size: 1em; padding: 0em; color: #555;">
+    (Results are downsampled <strong>4 times</strong> for efficient online rendering)
+  </p>
+
+  <!-- Wrapper for iframes -->
+  <div id="wrapper" style="
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 2em;
+      ">
+    <!-- Insert iframe with trimmed borders -->
+    <div class="iframe-container">
+      <iframe src="https://junyi42-viser-test.hf.space/" scrolling="no"></iframe>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- End new content -->
+
+  <div class="content">
+    <h2 style="text-align:center;">Abstract</h2>
+    <font size="-0.">
+    <p>Dynamic 3D reconstruction and point tracking in videos are typically treated as separate tasks, despite their deep connection. 
+      We propose St4RTrack, a feed-forward framework that simultaneously reconstructs and tracks dynamic video content in a world coordinate frame from RGB inputs. 
+      This is achieved by predicting two appropriately defined pointmaps for a pair of frames captured at different moments. 
+      Specifically, we predict both pointmaps at the same moment, in the same world, capturing both static and dynamic scene geometry while maintaining 3D correspondences. 
+      Chaining these predictions through the video sequence with respect to a reference frame naturally computes long-range correspondences, effectively combining 3D reconstruction with 3D tracking. 
+      Unlike prior methods that rely heavily on 4D ground truth supervision, we employ a novel adaptation scheme based on a reprojection loss. 
+      We establish a new extensive benchmark for world-frame reconstruction and tracking, demonstrating the effectiveness and efficiency of our unified, data-driven framework.
+    </p>
+  </font>
+  </div>
+
+  <div class="content">
+    <h2>Unified 4D Modeling with Time-Dependent Pointmap</h2>
+    <p> <strong>Pointmap representation</strong>: estimate per-pixel xyz coordinates for <strong>two frames</strong>, <strong>aligned in</strong> the camera coordinate of <strong>first frame</strong>. 
+      <br> <strong>Key Insight</strong>: by repurposing the two pointmaps, we enable simultaneous tracking and reconstruction with the <em>same</em> architecture. </p>
+    <img class="summary-img" src="./files/fig2_conceptv2.png" style="width:100%;margin-bottom: -10px;">
+    <h3>
+      <center>Conceptual difference between DUSt3R, MonST3R, and St4RTrack</center>
+    </h3>
+    <a>
+      <strong>Left</strong>: DUSt3R reconstructs two images of a static scene, and aligns them in the same camera coordinate system.
+      <br><strong>Middle</strong>: MonST3R works for dynamic scenes, but it reconstructs the geometry of two frames in their own timestamp.
+      <br><strong>Right</strong>: St4RTrack estimatess two pointmaps at the same timestamp. It predicts how the points in the first frame move to the second frame, and reconstructs the geometry of the second frame.
+    </a>
+
+  </div>
+  
+  <div class="content">
+    <h2>Adapt to Any Video without 4D Label</h2>
+    <p> We train our network on three synthetic datasets and found that training on small-scale, sparse labeled, and unrealistic synthetic data is sufficient for our network to learn the newly proposed representation. </p>
+    <p> However, synthetic training alone limits generalization to real-world scenes with complex motion and geometry.
+      We address this by leveraging the inherent geometric and motion in the representation to adapt to any video without 4D labels, using only <strong>reprojected supervision signals</strong> like 2D trajectories and monocular depth. </p>
+    <img class="summary-img" src="./files/fig3_overview.png" style="width:100%;">
+    <h3>
+      <center>Overview of St4RTrack</center>
+    </h3>
+    <a style="line-height: 1.0;">
+      Given frame $1$ and frame $j$ as input, the tracking branch outputs 
+      ${}^{\color{rgb(204,153,0)}{1}}\text{X}^{\color{rgb(180,80,180)}{1}}_{\color{rgb(80,200,80)}{j}}$, 
+      the pointmap that corresponds to $\color{rgb(180,80,180)}{\text{observed content}}$ of the first frame at $\color{rgb(80,200,80)}{\text{timestep}}$ $j$ in its own $\color{rgb(204,153,0)}{\text{camera coordinate}}$ (i.e. world coordinate); 
+      the reconstruction branch outputs ${}^{\color{rgb(204,153,0)}{1}}\text{X}^{\color{rgb(180,80,180)}{j}}_{\color{rgb(80,200,80)}{j}}$, the pointmap of the $\color{rgb(180,80,180)}{\text{content}}$ in frame $j$ at its own $\color{rgb(80,200,80)}{\text{timestep}}$ in the world $\color{rgb(204,153,0)}{\text{coordinate}}$.
+    </a>
+    <div style="height: 0.75em;"></div>
+    <a style="line-height: 1.5;">
+      To adapt to new videos without any 4D labels, the camera is computed via <strong>differentiable PnP</strong> from the reconstruction pointmap, enabling <strong>reprojected supervision signals</strong> (e.g., 2D trajectories and monocular depth). We finetune both branches during training with synthetic data, and when adapting to a new video, <strong>only the tracking branch</strong> is fine-tuned using these reprojected supervision signals.
+    </a>
+  </div>
+
+  <div class="content">
+    <h2>Results - World Coordinate Tracking</h2>
+    <p> Since there is no previous work on world coordinate tracking, we first propose a new benchmark, <em>WorldTrack</em>, for evaluation.</p>
+    <p> Qualitatively, St4RTrack achieves best APD (upper) and ATE (lower) on WorldTrack, compared with combinational methods. </p>
+    <img class="summary-img" src="./files/fig4_track1.png" style="width:80%;">
+    <img class="summary-img" src="./files/fig4_track2.png" style="width:80%; margin-top: 10px;">
+    <p> Qualitatively, St4RTrack can handle both camera and scene motion, in a feed-forward manner. </p>
+    <img class="summary-img" src="./files/fig5_track3.png" style="width:100%;">
+    <!-- <h3>
+      <center>Video depth evaluation on Bonn dataset, predicted depth is after scale&shift alignment</center>
+    </h3> -->
+  </div>
+
+  <div class="content">
+    <h2>Results - World Coordinate Reconstruction</h2>
+    <p> Quantitatively, the reconstruction results are competitive with task-specific methods. </p>
+    <img class="summary-img" src="./files/fig6_recon1.png" style="width:80%;">
+    <h4>
+      <center>world coordinate reconstruction results under median-scale alignment (<em>left</em>) and sim(3) alignment (<em>right</em>)</center>
+    </h4>
+    <p> Qualitatively, St4RTrack achieves reasonable results as a pair-wise feed-forward framework. </p>
+    <img class="summary-img" src="./files/fig7_recon2.png" style="width:90%; margin-top: 0px; margin-bottom: 0px;">
+    <img class="summary-img" src="./files/fig7_recon3.png" style="width:90%; margin-top: 20px; margin-bottom: 0px;">
+    <h4>
+      <center>world coordinate reconstruction results on PointOdyssey (<em>Top</em>) and TUM-Dynamics (<em>Bottom</em>)</center>
+    </h4>
+  </div>
+
+  <div class="content">
+    <h2>Results - Joint 4D Reconstruction and Tracking</h2>
+    <p> We show below the pair output of a single frame, accumulated reconstruction, and accumulated tracking results on DAVIS. </p>
+    <img class="summary-img" src="./files/fig8_joint1.png" style="width:90%; margin-top: 0px; margin-bottom: -5px;">
+    <h4>
+      <center>fully feed-forward inference results of St4RTrack</center>
+    </h4>
+    <img class="summary-img" src="./files/fig9_joint2.png" style="width:90%; margin-top: 0px; margin-bottom: 20px;">
+    <img class="summary-img" src="./files/fig9_joint3.png" style="width:90%; margin-top: 0px; margin-bottom: -5px;">
+    <h4>
+      <center>test-time adaptation results of St4RTrack</center>
+    </h4>
+  </div>
+
+  <div class="content">
+    <h2>Limitations</h2>
+    <p>Despite St4RTrack's promising approach to unified dynamic scene understanding, several limitations remain:</p>
+    
+    <ul style="line-height: 1.5; margin-bottom: -10px; margin-top: -10px;">
+      <li><em>Per-frame processing:</em> Issues like scale misalignment, large camera movements, and occlusions are not fully resolved. Incorporating temporal attention across multiple frames could capture richer motion priors.</li>
+      <li><em>Training data limitations:</em> The pretraining datasets lack diversity and realism in both geometry and motion, requiring test-time adaptation for out-of-distribution scenarios.</li>
+      <li><em>Complex motion handling:</em> The current approach struggles with highly complex motions, suggesting that expanding the training dataset is a key direction for future work.</li>
+    </ul>
+    
+    <p>We believe large-scale pretraining, when compute permits, could boost St4RTrack's performance for complex, in-the-wild videos.</p>
+  </div>
+
+  <div class="content">
+    <h2>BibTex</h2>
+    <font size="-0.">
+    <code> @article{st4rtrack2025,<br>
+    &nbsp;&nbsp;title={St4RTrack: Simultaneous 4D Reconstruction and Tracking in the World},<br>
+    &nbsp;&nbsp;author={Feng, Haiwen and Zhang, Junyi and Wang, Qianqian and Ye, Yufei and Yu, Pengcheng and Black, Michael J. and Darrell, Trevor and Kanazawa, Angjoo},<br>
+    &nbsp;&nbsp;journal={arXiv preprint arxiv:2504},<br>
+    &nbsp;&nbsp;year={2025}<br>
+    } </code>
+  </font>
+  </div>
+  
+  <div class="content" id="acknowledgements">
+    <p><strong>Acknowledgements</strong>:
+      We borrow this template from <a href="https://sd-complements-dino.github.io/">SD+DINO</a>, which is originally from <a href="https://dreambooth.github.io/">DreamBooth</a>. 
+      The interactive 4D visualization is powered by <a href="https://github.com/nerfstudio-project/viser">Viser</a>. 
+      We would like to thank Aleksander Holynski, Yifei Zhang, Chung Min Kim, Brent Yi, and Zehao Yu for helpful discussions. 
+      We sincerely thank Brent Yi for his support in setting up the online visualization. 
+      We especially thank Aleksander Holynski for his guidance and feedback.
+      <!-- Recycling a familiar <a href="https://chail.github.io/latent-composition/">template</a> ;). -->
+    </p>
+  </div>
+</body>
+
+</html>
