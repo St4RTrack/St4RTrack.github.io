@@ -263,13 +263,23 @@
       ">
     <!-- Insert iframe with trimmed borders -->
     <div class="iframe-container">
-      <iframe src="https://junyi42-viser-test.hf.space/" scrolling="no"></iframe>
+      <iframe id="viser-iframe" scrolling="no"></iframe>
     </div>
   </div>
 
   </div>
 
   <!-- End new content -->
+
+  <!-- Add script to randomly select iframe source -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Generate random number between 1-4
+      const randomNum = Math.floor(Math.random() * 4) + 1;
+      // Set the iframe src with the random number
+      document.getElementById('viser-iframe').src = `https://junyi42-viser-test${randomNum}.hf.space/`;
+    });
+  </script>
 
   <div class="content">
     <h2 style="text-align:center;">Abstract</h2>
