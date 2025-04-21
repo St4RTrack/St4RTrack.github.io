@@ -186,7 +186,7 @@
       <h4 style="width: 100%; text-align: center; margin-top: 1.5em; margin-bottom: 0.5em;">Results of Fully Feed-Forward</h4>
   </div>
 
-  <!-- Add script to assign specific iframe sources -->
+  <!-- Add script to assign specific iframe sources with random number suffix -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Define the list of available viser models in specific order
@@ -197,11 +197,23 @@
         'viser-lady',
       ];
       
-      // Assign specific models to each iframe
-      document.getElementById('iframe1').src = `https://junyi42-${viserModels[0]}.hf.space/`;
-      document.getElementById('iframe2').src = `https://junyi42-${viserModels[1]}.hf.space/`;
-      document.getElementById('iframe3').src = `https://junyi42-${viserModels[2]}.hf.space/`;
-      document.getElementById('iframe4').src = `https://junyi42-${viserModels[3]}.hf.space/`;
+      // Assign specific models to each iframe with random number suffix (0-4)
+      const iframe1 = document.getElementById('iframe1');
+      const iframe2 = document.getElementById('iframe2');
+      const iframe3 = document.getElementById('iframe3');
+      const iframe4 = document.getElementById('iframe4');
+      
+      // Generate random numbers between 0-4 for each iframe
+      const random1 = Math.floor(Math.random() * 4);
+      const random2 = Math.floor(Math.random() * 4);
+      const random3 = Math.floor(Math.random() * 4);
+      const random4 = Math.floor(Math.random() * 4);
+      
+      // Set the iframe src with the model name and random number suffix (only if not 0)
+      iframe1.src = `https://junyi42-${viserModels[0]}${random1 > 0 ? random1 : ''}.hf.space/`;
+      iframe2.src = `https://junyi42-${viserModels[1]}${random2 > 0 ? random2 : ''}.hf.space/`;
+      iframe3.src = `https://junyi42-${viserModels[2]}${random3 > 0 ? random3 : ''}.hf.space/`;
+      iframe4.src = `https://junyi42-${viserModels[3]}${random4 > 0 ? random4 : ''}.hf.space/`;
     });
   </script>
 </body>
