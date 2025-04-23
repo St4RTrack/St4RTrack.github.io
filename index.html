@@ -279,6 +279,46 @@
     });
   </script>
 
+  <!-- Add script to handle video loading -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const video = document.getElementById('teaser-video');
+      const poster = document.getElementById('video-poster');
+      
+      // Function to check if video can play through
+      function checkVideoReady() {
+        // When video metadata is loaded
+        video.addEventListener('loadeddata', function() {
+          // Short timeout to ensure video is actually ready
+          setTimeout(function() {
+            // Hide poster image
+            poster.style.display = 'none';
+            // Show video
+            video.style.display = 'block';
+            // Start playing
+            video.play().catch(function(error) {
+              console.log('Auto-play prevented:', error);
+              // If autoplay is blocked, at least show the video with controls
+              video.style.display = 'block';
+              poster.style.display = 'none';
+            });
+          }, 100);
+        });
+        
+        // If video errors during loading
+        video.addEventListener('error', function() {
+          console.log('Video loading error - keeping poster visible');
+          // Keep poster visible in case of error
+          poster.style.display = 'block';
+          video.style.display = 'none';
+        });
+      }
+      
+      // Start checking if video is ready
+      checkVideoReady();
+    });
+  </script>
+
   <div class="content">
     <h2 style="text-align:center;">Abstract</h2>
     <font size="-0.">
