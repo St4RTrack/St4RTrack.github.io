@@ -180,7 +180,7 @@
       <img src="./files/teaser_st4rtrack.png" class="teaser-gif" style="width:100%;"><br> -->
 
     <!-- add video files/teaser_vid_v2_lowres.mp4 -->
-    <video width="100%" controls autoplay muted style=" margin-top: -22.5px; margin-bottom: 12.5px">
+    <video id="teaser-video" width="100%" controls muted style=" margin-top: -22.5px; margin-bottom: 12.5px">
       <source src="./files/st4rtrack_teaser_vid_lowres.mp4" type="video/mp4">
     </video>
 
@@ -276,6 +276,26 @@
       const randomNum = Math.floor(Math.random() * 13) + 1;
       // Set the iframe src with the random number
       document.getElementById('viser-iframe').src = `https://havenfeng-viser-stroller${randomNum}.hf.space/`;
+    });
+  </script>
+
+  <!-- Add script for delayed video playback -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const video = document.getElementById('teaser-video'); // Get the video element by its ID
+
+      if (video) {
+        // Wait for 3000 milliseconds (3 seconds)
+        setTimeout(function() {
+          // Attempt to play the video
+          video.play().catch(function(error) {
+            console.log('Delayed auto-play prevented:', error);
+            // Handle potential errors (e.g., browser blocking autoplay)
+          });
+        }, 3000);
+      } else {
+        console.error('Video element with ID "teaser-video" not found.');
+      }
     });
   </script>
 
