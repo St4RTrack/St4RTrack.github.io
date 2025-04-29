@@ -279,20 +279,50 @@
     });
   </script>
 
-  <!-- Add script for delayed video playback -->
+  <!-- Add script for delayed video playback and delayed looping -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const video = document.getElementById('teaser-video'); // Get the video element by its ID
 
       if (video) {
-        // Wait for 3000 milliseconds (3 seconds)
-        setTimeout(function() {
+        // --- Initial Play Delay ---
+        // Wait for 2000 milliseconds (2 seconds) before first play
+        const initialPlayTimeout = setTimeout(function() {
           // Attempt to play the video
           video.play().catch(function(error) {
             console.log('Delayed auto-play prevented:', error);
             // Handle potential errors (e.g., browser blocking autoplay)
           });
-        }, 3000);
+        }, 2000);
+
+        // --- Delayed Looping ---
+        let loopTimeout; // Variable to hold the loop timeout
+
+        // Listen for when the video ends
+        video.addEventListener('ended', function() {
+          // Clear any previous loop timeout if it exists
+          clearTimeout(loopTimeout);
+          // Wait for 2000 milliseconds (2 seconds) before looping
+          loopTimeout = setTimeout(function() {
+            video.currentTime = 0; // Reset video to the beginning
+            video.play().catch(function(error) {
+              console.log('Delayed loop play prevented:', error);
+              // Handle potential errors
+            });
+          }, 2000);
+        });
+
+        // Optional: Clear timeouts if the user manually pauses
+        // to prevent unexpected looping after manual interaction
+        video.addEventListener('pause', function() {
+            // Only clear the loop timeout if the video isn't at the end
+            // (because the 'ended' event also triggers 'pause' sometimes)
+            if (!video.ended) {
+                 clearTimeout(initialPlayTimeout); // Clear initial delay if paused before it starts
+                 clearTimeout(loopTimeout); // Clear loop delay
+            }
+        });
+
       } else {
         console.error('Video element with ID "teaser-video" not found.');
       }
