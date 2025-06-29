@@ -1,6 +1,6 @@
-@article{st4rtrack2025,
-    title={St4RTrack: Simultaneous 4D Reconstruction and Tracking in the World},
-    author={Feng, Haiwen and Zhang, Junyi and Wang, Qianqian and Ye, Yufei and Yu, Pengcheng and Black, Michael J. and Darrell, Trevor and Kanazawa, Angjoo},
-    journal={arXiv preprint arxiv:2504.13152},
+@inproceedings{st4rtrack2025,
+    title={St4RTrack: Simultaneous 4D Reconstruction and Tracking in the World},<br>
+    author={Feng*, Haiwen and Zhang*, Junyi and Wang, Qianqian and Ye, Yufei and Yu, Pengcheng and Black, Michael J. and Darrell, Trevor and Kanazawa, Angjoo},<br>
+    booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision},<br>
     year={2025}
 }
